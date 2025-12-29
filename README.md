@@ -1,6 +1,5 @@
-## Insyd Inventory – Part 2 (Next.js + Express + Postgres)
+ (Next.js + Express + Postgres)
 
-This project is a production-style implementation of **Part 2** of the Insyd SDE internship assignment.
 It focuses on **inventory visibility** for Indian material businesses (tiles, laminates, cement, lighting, etc.).
 
 The solution provides:
@@ -19,8 +18,6 @@ The solution provides:
 - **Backend**: Node.js, Express.js
 - **Database**: PostgreSQL (tested with Neon)
 - **Deployment**:
-  - Frontend: Vercel
-  - Backend: Render (or Railway)
 
 ---
 
@@ -30,8 +27,6 @@ The solution provides:
 Insyd/
   backend/        # Express API + Postgres
   frontend/       # Next.js dashboard
-  Part 1.pdf      # Problem-solving document from assignment
-  SDE intern assignment.pdf
 ```
 
 ### Backend (`backend/`)
