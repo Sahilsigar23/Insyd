@@ -201,22 +201,6 @@ Open `http://localhost:3000`.
 
 ---
 
-## Explaining This Project in an Interview
-
-- **Problem**: “Many small/medium material businesses in India don’t have real-time visibility into stock levels.
-  They only see shortages after they lose a sale or over-order.”
-- **Solution**: “I built a full-stack inventory visibility system with a live dashboard, low-stock alerts,
-  and SKU insights. It models purchases and sales as movements on top of a Postgres database, with a clean API
-  and a professional dashboard UI.”
-- **Architecture**:
-  - Next.js frontend (App Router) for fast navigation and modern UX.
-  - Express backend with a simple, layered structure (routes → services → DB).
-  - Postgres as system of record with a normalized schema plus a denormalized `current_stock` column for fast reads.
-- **Trade-offs**:
-  - Single backend service (monolith) for simplicity; no microservices or queues.
-  - Derived `is_low_stock` field for cheap filtering vs recomputing on every read.
-  - Straightforward REST instead of GraphQL for clarity in an assignment context.
-
 
 
 
