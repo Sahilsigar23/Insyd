@@ -1,6 +1,5 @@
-## Insyd Inventory – Part 2 (Next.js + Express + Postgres)
-
-This project is a production-style implementation of **Part 2** of the Insyd SDE internship assignment.
+ (Next.js + Express + Postgres)
+.
 It focuses on **inventory visibility** for Indian material businesses (tiles, laminates, cement, lighting, etc.).
 
 The solution provides:
@@ -18,9 +17,6 @@ The solution provides:
 - **Frontend**: Next.js 14 (App Router), React 18, SWR
 - **Backend**: Node.js, Express.js
 - **Database**: PostgreSQL (tested with Neon)
-- **Deployment**:
-  - Frontend: Vercel
-  - Backend: Render (or Railway)
 
 ---
 
@@ -208,7 +204,6 @@ Open `http://localhost:3000`.
   - Derived `is_low_stock` field for cheap filtering vs recomputing on every read.
   - Straightforward REST instead of GraphQL for clarity in an assignment context.
 
-This README is intentionally concise but complete enough for a reviewer to understand,
-run, and evaluate the project quickly.
+
 
 
