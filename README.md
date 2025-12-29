@@ -1,5 +1,5 @@
- (Next.js + Express + Postgres)
-.
+## Insyd Inventory – Part 2 (Next.js + Express + Postgres)
+
 It focuses on **inventory visibility** for Indian material businesses (tiles, laminates, cement, lighting, etc.).
 
 The solution provides:
@@ -26,8 +26,6 @@ The solution provides:
 Insyd/
   backend/        # Express API + Postgres
   frontend/       # Next.js dashboard
-  Part 1.pdf      # Problem-solving document from assignment
-  SDE intern assignment.pdf
 ```
 
 ### Backend (`backend/`)
