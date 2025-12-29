@@ -173,7 +173,22 @@ Open `http://localhost:3000`.
    npm run start
    ```
 
-### Frontend on Vercel
+### Frontend on Render (Web Service)
+
+1. Create a new **Web Service** on Render (not Static Site, since we have dynamic routes).
+2. Point to your GitHub repo with:
+   - **Root Directory**: `frontend`
+   - **Build Command**: `npm install && npm run build`
+   - **Start Command**: `npm run start`
+3. Set environment variable:
+
+   ```text
+   NEXT_PUBLIC_API_BASE_URL=https://your-backend-service.onrender.com
+   ```
+
+4. Deploy – Render will build and run the Next.js app as a Node.js service.
+
+**Alternative: Frontend on Vercel** (Recommended for Next.js)
 
 1. Import the GitHub repo into Vercel (root = `frontend/`).
 2. Set environment variable:
