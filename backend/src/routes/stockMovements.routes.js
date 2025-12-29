@@ -11,8 +11,8 @@ stockMovementsRouter.post("/", async (req, res, next) => {
     if (!productId || !type || !quantity || quantity <= 0) {
       return res.status(400).json({ error: "productId, type and positive quantity are required" });
     }
-    if (!["PURCHASE", "SALE"].includes(type)) {
-      return res.status(400).json({ error: "type must be PURCHASE or SALE" });
+    if (!["PURCHASE", "SALE", "DAMAGE"].includes(type)) {
+      return res.status(400).json({ error: "type must be PURCHASE, SALE, or DAMAGE" });
     }
 
     // Fetch current stock
@@ -26,8 +26,12 @@ stockMovementsRouter.post("/", async (req, res, next) => {
     if (type === "PURCHASE") {
       newStock += quantity;
     } else {
+      // SALE or DAMAGE both reduce stock
       if (product.current_stock - quantity < 0) {
-        return res.status(400).json({ error: "Sale quantity exceeds current stock" });
+        const errorMsg = type === "SALE" 
+          ? "Sale quantity exceeds current stock" 
+          : "Damage quantity exceeds current stock";
+        return res.status(400).json({ error: errorMsg });
       }
       newStock -= quantity;
     }

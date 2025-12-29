@@ -5,13 +5,14 @@ import useSWR from "swr";
 import Link from "next/link";
 import { fetcher, API_BASE_URL } from "../../lib/api";
 
-type MovementMode = "SALE" | "PURCHASE" | null;
+type MovementMode = "SALE" | "PURCHASE" | "DAMAGE" | null;
 
 export default function DashboardPage() {
   const { data, error, mutate } = useSWR(`${API_BASE_URL}/products`, fetcher);
   const [movementMode, setMovementMode] = useState<MovementMode>(null);
   const [selectedProduct, setSelectedProduct] = useState<any | null>(null);
   const [quantity, setQuantity] = useState<number>(1);
+  const [damageReason, setDamageReason] = useState<string>("");
   const [saving, setSaving] = useState(false);
   const [movementError, setMovementError] = useState<string | null>(null);
 
@@ -24,12 +25,14 @@ export default function DashboardPage() {
     setSelectedProduct(product);
     setMovementMode(mode);
     setQuantity(1);
+    setDamageReason("");
     setMovementError(null);
   };
 
   const closeMovement = () => {
     setMovementMode(null);
     setSelectedProduct(null);
+    setDamageReason("");
     setMovementError(null);
   };
 
@@ -43,14 +46,21 @@ export default function DashboardPage() {
     setSaving(true);
     setMovementError(null);
     try {
+      const body: any = {
+        productId: selectedProduct.id,
+        type: movementMode,
+        quantity
+      };
+      
+      // Add note for damage with reason
+      if (movementMode === "DAMAGE" && damageReason.trim()) {
+        body.note = `Damage reason: ${damageReason.trim()}`;
+      }
+      
       const res = await fetch(`${API_BASE_URL}/stock-movements`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          productId: selectedProduct.id,
-          type: movementMode,
-          quantity
-        })
+        body: JSON.stringify(body)
       });
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
@@ -123,6 +133,13 @@ export default function DashboardPage() {
                     >
                       Purchase
                     </button>
+                    <button
+                      type="button"
+                      className="btn btn-secondary btn-xs"
+                      onClick={() => openMovement(p, "DAMAGE")}
+                    >
+                      Damage
+                    </button>
                     <Link href={`/products/${p.id}/edit`} className="btn btn-secondary btn-xs">
                       Edit
                     </Link>
@@ -139,7 +156,7 @@ export default function DashboardPage() {
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal__header">
               <h3 className="modal__title">
-                Record {movementMode === "SALE" ? "Sale" : "Purchase"} – {selectedProduct.sku}
+                Record {movementMode === "SALE" ? "Sale" : movementMode === "PURCHASE" ? "Purchase" : "Damage"} – {selectedProduct.sku}
               </h3>
             </div>
             <div className="modal__body">
@@ -158,6 +175,25 @@ export default function DashboardPage() {
                     onChange={(e) => setQuantity(Number(e.target.value))}
                   />
                 </div>
+                {movementMode === "DAMAGE" && (
+                  <div className="form-field">
+                    <label htmlFor="damageReason">Damage Reason</label>
+                    <select
+                      id="damageReason"
+                      name="damageReason"
+                      value={damageReason}
+                      onChange={(e) => setDamageReason(e.target.value)}
+                      required
+                    >
+                      <option value="">Select reason...</option>
+                      <option value="Expired">Expired</option>
+                      <option value="Damaged">Damaged</option>
+                      <option value="Broken">Broken</option>
+                      <option value="Defective">Defective</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                )}
                 {movementError && <p className="form-error">{movementError}</p>}
                 <div className="form-actions">
                   <button type="button" className="btn btn-secondary" onClick={closeMovement}>

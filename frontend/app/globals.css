@@ -309,17 +309,24 @@ button.btn {
   color: var(--text-secondary);
 }
 
-.form-field input {
+.form-field input,
+.form-field select {
   padding: 0.45rem 0.6rem;
   border-radius: 0.45rem;
   border: 1px solid #1f2937;
   background-color: #020617;
   color: var(--text-primary);
+  font-family: inherit;
 }
 
-.form-field input:focus {
+.form-field input:focus,
+.form-field select:focus {
   outline: 1px solid var(--accent);
   border-color: var(--accent);
+}
+
+.form-field select {
+  cursor: pointer;
 }
 
 .form-error {

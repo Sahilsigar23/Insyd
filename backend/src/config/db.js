@@ -43,7 +43,19 @@ export const initDb = async () => {
 
     const sql = fs.readFileSync(schemaPath, "utf8");
     await pool.query(sql);
-    console.log("Database schema ensured (products, stock_movements).");
+    
+    // Apply migration to add DAMAGE type if constraint exists
+    try {
+      await pool.query(`
+        ALTER TABLE stock_movements DROP CONSTRAINT IF EXISTS stock_movements_type_check;
+        ALTER TABLE stock_movements ADD CONSTRAINT stock_movements_type_check 
+          CHECK (type IN ('PURCHASE', 'SALE', 'DAMAGE'));
+      `);
+      console.log("Migration applied: DAMAGE type added to stock_movements.");
+    } catch (migrationErr) {
+      // If constraint update fails, log but don't fail startup
+      console.log("Note: Constraint update skipped (may already be updated or table is new).");
+    }
   } catch (err) {
     console.error("Error initializing database schema:", err);
   }

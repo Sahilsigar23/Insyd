@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS products (
 CREATE TABLE IF NOT EXISTS stock_movements (
   id SERIAL PRIMARY KEY,
   product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
-  type TEXT NOT NULL CHECK (type IN ('PURCHASE', 'SALE')),
+  type TEXT NOT NULL CHECK (type IN ('PURCHASE', 'SALE', 'DAMAGE')),
   quantity INTEGER NOT NULL CHECK (quantity > 0),
   unit_price NUMERIC,
   note TEXT,
