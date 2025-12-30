@@ -4,7 +4,7 @@ import { initDb } from "./config/db.js";
 
 dotenv.config();
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 4000 || 4321;
 const app = createApp();
 
 // Ensure schema exists, then start server

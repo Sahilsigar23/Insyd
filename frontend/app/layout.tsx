@@ -33,14 +33,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             </nav>
           </aside>
           <main className="app-main">
-            <header className="app-topbar">
-              <div>
-                <h1 className="app-topbar__title">Inventory Dashboard</h1>
-                <p className="app-topbar__subtitle">
-                  Live stock, low-stock alerts, and basic SKU insights for material businesses.
-                </p>
-              </div>
-            </header>
             <section className="app-content">{children}</section>
           </main>
         </div>

@@ -15,11 +15,21 @@ export default function DashboardPage() {
   const [damageReason, setDamageReason] = useState<string>("");
   const [saving, setSaving] = useState(false);
   const [movementError, setMovementError] = useState<string | null>(null);
+  const [damageReasonError, setDamageReasonError] = useState<string | null>(null);
 
   if (error) return <div className="card card--error">Error loading products</div>;
   if (!data) return <div className="card">Loading...</div>;
 
   const products = data.data || [];
+
+  const totalSkus = products.length;
+  const totalUnitsInStock = products.reduce(
+    (sum: number, p: any) => sum + (Number(p.current_stock) || 0),
+    0
+  );
+  const lowStockCount = products.filter(
+    (p: any) => Number(p.current_stock) < Number(p.reorder_threshold)
+  ).length;
 
   const openMovement = (product: any, mode: MovementMode) => {
     setSelectedProduct(product);
@@ -27,6 +37,7 @@ export default function DashboardPage() {
     setQuantity(1);
     setDamageReason("");
     setMovementError(null);
+    setDamageReasonError(null);
   };
 
   const closeMovement = () => {
@@ -43,8 +54,16 @@ export default function DashboardPage() {
       setMovementError("Quantity must be greater than 0");
       return;
     }
+    
+    // Validate damage reason
+    if (movementMode === "DAMAGE" && !damageReason.trim()) {
+      setDamageReasonError("Please select");
+      return;
+    }
+    
     setSaving(true);
     setMovementError(null);
+    setDamageReasonError(null);
     try {
       const body: any = {
         productId: selectedProduct.id,
@@ -86,6 +105,24 @@ export default function DashboardPage() {
           <Link href="/products/new" className="btn btn-primary">
             + Add Product
           </Link>
+        </div>
+      </div>
+
+      <div className="kpi-grid">
+        <div className="kpi-card">
+          <div className="kpi-label">Total SKUs</div>
+          <div className="kpi-value">{totalSkus}</div>
+          <div className="kpi-caption">Unique products you are tracking</div>
+        </div>
+        <div className="kpi-card">
+          <div className="kpi-label">Units in Stock</div>
+          <div className="kpi-value">{totalUnitsInStock}</div>
+          <div className="kpi-caption">Sum of all current on-hand units</div>
+        </div>
+        <div className="kpi-card">
+          <div className="kpi-label">Low-stock SKUs</div>
+          <div className="kpi-value">{lowStockCount}</div>
+          <div className="kpi-caption">Below their reorder threshold</div>
         </div>
       </div>
 
@@ -182,16 +219,24 @@ export default function DashboardPage() {
                       id="damageReason"
                       name="damageReason"
                       value={damageReason}
-                      onChange={(e) => setDamageReason(e.target.value)}
-                      required
+                      onChange={(e) => {
+                        setDamageReason(e.target.value);
+                        if (e.target.value) {
+                          setDamageReasonError(null);
+                        }
+                      }}
+                      className={damageReasonError ? "form-field--error" : ""}
                     >
-                      <option value="">Select reason...</option>
+                      <option value="" disabled>Select reason...</option>
                       <option value="Expired">Expired</option>
                       <option value="Damaged">Damaged</option>
                       <option value="Broken">Broken</option>
                       <option value="Defective">Defective</option>
                       <option value="Other">Other</option>
                     </select>
+                    {damageReasonError && (
+                      <span className="form-field-error">{damageReasonError}</span>
+                    )}
                   </div>
                 )}
                 {movementError && <p className="form-error">{movementError}</p>}

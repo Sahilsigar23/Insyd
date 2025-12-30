@@ -11,6 +11,7 @@ export default function LowStockPage() {
   if (!data) return <div className="card">Loading...</div>;
 
   const products = data.data || [];
+  const lowStockCount = products.length;
 
   return (
     <div className="page-stack">
@@ -25,10 +26,19 @@ export default function LowStockPage() {
           </Link>
         </div>
       </div>
+      <div className="kpi-grid">
+        <div className="kpi-card">
+          <div className="kpi-label">Low-stock SKUs</div>
+          <div className="kpi-value">{lowStockCount}</div>
+          <div className="kpi-caption">Currently below their reorder threshold</div>
+        </div>
+      </div>
       <div className="card">
         <div className="card__body">
           {products.length === 0 ? (
-            <p>No low-stock items right now.</p>
+            <div className="empty-state">
+              <p>No low-stock items right now.</p>
+            </div>
           ) : (
             <table className="table">
               <thead>
